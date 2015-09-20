@@ -31,6 +31,8 @@ before_build:
 after_build:
   - cd C:\Projects\DarkTests
   - cd C:\Projects\DarkTests\build\Release\
+  - copy "C:\Projects\DarkTests\build\Release\DarkTests.exe" "c:\Projects\DarkTests\DarkTests.exe"
+  - cd c:\Projects\DarkTests
 
 artifacts:
   - path: DarkTests.exe
