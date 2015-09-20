@@ -8,7 +8,12 @@ std::string PlayerName = "";
 
 int main()
 {
-	LoadLibrary("DarkCore.dll");
+	HMODULE DarkCoreHandle = LoadLibrary("DarkCore.dll");
+	if (DarkCoreHandle == NULL){
+		std::cout << "------ WARNING DARKCORE.DLL NOT LODED -----\n";
+		std::cout << GetLastErrorAsString();
+		std::cout << "------ WARNING DARKCORE.DLL NOT LODED -----\n";
+	}
 	std::cout << "------------- Loaded DarkTests ------------\n";
 	SetPlayerName();
 	ShowPlayernameLoop();
@@ -46,4 +51,23 @@ void gen_random(char *s, const int len)
 	}
 
 	s[len] = 0;
+}
+
+std::string GetLastErrorAsString()
+{
+	//Get the error message, if any.
+	DWORD errorMessageID = ::GetLastError();
+	if (errorMessageID == 0)
+		return std::string(); //No error message has been recorded
+
+	LPSTR messageBuffer = nullptr;
+	size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+
+	std::string message(messageBuffer, size);
+
+	//Free the buffer.
+	LocalFree(messageBuffer);
+
+	return message;
 }
